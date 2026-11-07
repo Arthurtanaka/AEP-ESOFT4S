@@ -1,0 +1,28 @@
+# Arquivos compilados do Java
+*.class
+*.jar
+*.war
+
+# Pastas de build
+target/
+out/
+bin/
+build/
+
+# Arquivos de IDE
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+nbproject/
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Logs e arquivos locais (senhas e configurações pessoais não vão para o GitHub)
+*.log
+config.local.properties
+.env
