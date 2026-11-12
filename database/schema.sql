@@ -14,6 +14,9 @@ CREATE DATABASE IF NOT EXISTS movecity
 
 USE movecity;
 
+-- Garante que acentos sejam lidos corretamente (UTF-8) em qualquer sistema operacional.
+SET NAMES utf8mb4;
+
 -- ---------------------------------------------------------------------
 -- Tabela usuario
 -- Guarda Passageiro e Administrador na MESMA tabela (herança com tabela
@@ -134,10 +137,19 @@ CREATE TABLE IF NOT EXISTS alerta (
 );
 
 -- ---------------------------------------------------------------------
--- Dados de exemplo (valores ILUSTRATIVOS, apenas para testar o sistema).
--- Podem ser ajustados pela equipe na 2ª entrega.
+-- Dados iniciais (valores ILUSTRATIVOS, apenas para testar o sistema).
+-- Cada INSERT só acontece se ainda não existir um transporte daquele tipo,
+-- então este script pode ser executado mais de uma vez sem duplicar dados.
+-- A equipe pode ajustar os valores na 2ª entrega.
 -- ---------------------------------------------------------------------
-INSERT INTO transporte (nome, tipo, velocidade_media_kmh, emissao_co2_g_km, capacidade_passageiros, fator_congestionamento) VALUES
-    ('Automóvel particular', 'CARRO',     30.00, 120.00, NULL, 1.30),
-    ('Ônibus urbano',        'ONIBUS',    20.00,  70.00,   40, NULL),
-    ('Bicicleta',            'BICICLETA', 15.00,   0.00, NULL, NULL);
+INSERT INTO transporte (nome, tipo, velocidade_media_kmh, emissao_co2_g_km, capacidade_passageiros, fator_congestionamento)
+SELECT 'Automóvel particular', 'CARRO', 30.00, 120.00, NULL, 1.30 FROM DUAL
+WHERE NOT EXISTS (SELECT 1 FROM transporte WHERE tipo = 'CARRO');
+
+INSERT INTO transporte (nome, tipo, velocidade_media_kmh, emissao_co2_g_km, capacidade_passageiros, fator_congestionamento)
+SELECT 'Ônibus urbano', 'ONIBUS', 20.00, 70.00, 40, NULL FROM DUAL
+WHERE NOT EXISTS (SELECT 1 FROM transporte WHERE tipo = 'ONIBUS');
+
+INSERT INTO transporte (nome, tipo, velocidade_media_kmh, emissao_co2_g_km, capacidade_passageiros, fator_congestionamento)
+SELECT 'Bicicleta', 'BICICLETA', 15.00, 0.00, NULL, NULL FROM DUAL
+WHERE NOT EXISTS (SELECT 1 FROM transporte WHERE tipo = 'BICICLETA');

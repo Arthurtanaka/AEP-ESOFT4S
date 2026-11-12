@@ -1,13 +1,18 @@
 # Arquivos compilados do Java
 *.class
-*.jar
 *.war
-
-# Pastas de build
-target/
 out/
+target/
 bin/
 build/
+fontes.txt
+
+# Driver do MySQL: cada pessoa baixa o seu e coloca em lib/ (veja o README)
+lib/*.jar
+
+# Configuração local (contém a senha do seu MySQL - NUNCA vai para o GitHub)
+config.local.properties
+.env
 
 # Arquivos de IDE
 .idea/
@@ -22,7 +27,5 @@ nbproject/
 .DS_Store
 Thumbs.db
 
-# Logs e arquivos locais (senhas e configurações pessoais não vão para o GitHub)
+# Logs
 *.log
-config.local.properties
-.env
