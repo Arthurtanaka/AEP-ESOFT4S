@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MoveCity - Mobilidade Urbana Sustentável</title>
+  <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+  <header class="topo">
+    <div class="topo-conteudo">
+      <h1 class="marca">MoveCity <span>mobilidade urbana sustentável</span></h1>
+      <nav id="menu" aria-label="Navegação principal"></nav>
+    </div>
+  </header>
+
+  <div id="aviso" class="aviso" role="status" aria-live="polite" hidden></div>
+
+  <main class="conteudo">
+
+    <!-- ========== CONSULTA (livre) ========== -->
+    <section id="tela-consulta" class="tela">
+      <h2>Consultar rotas</h2>
+      <p class="ajuda">Informe a origem e o destino para comparar as alternativas por tempo, distância e impacto ambiental.</p>
+      <form id="form-consulta" class="cartao linha-form">
+        <label>Origem <input id="consulta-origem" required placeholder="Ex.: Centro"></label>
+        <label>Destino <input id="consulta-destino" required placeholder="Ex.: Zona Norte"></label>
+        <button type="submit" class="primario">Consultar</button>
+      </form>
+      <div id="resultado-consulta"></div>
+    </section>
+
+    <!-- ========== ENTRAR ========== -->
+    <section id="tela-entrar" class="tela" hidden>
+      <h2>Entrar</h2>
+      <form id="form-login" class="cartao coluna-form">
+        <label>E-mail <input id="login-email" type="email" required autocomplete="username"></label>
+        <label>Senha <input id="login-senha" type="password" required autocomplete="current-password"></label>
+        <button type="submit" class="primario">Entrar</button>
+      </form>
+    </section>
+
+    <!-- ========== CADASTRO ========== -->
+    <section id="tela-cadastro" class="tela" hidden>
+      <h2>Criar conta</h2>
+      <form id="form-cadastro" class="cartao coluna-form">
+        <label>Nome completo <input id="cad-nome" required minlength="3"></label>
+        <label>E-mail <input id="cad-email" type="email" required autocomplete="username"></label>
+        <label>Senha (mínimo 6 caracteres) <input id="cad-senha" type="password" required minlength="6" autocomplete="new-password"></label>
+        <label>Perfil
+          <select id="cad-perfil">
+            <option value="PASSAGEIRO">Passageiro</option>
+            <option value="ADMINISTRADOR">Administrador</option>
+          </select>
+        </label>
+        <label id="cad-pref-box">Preferência de deslocamento
+          <select id="cad-pref">
+            <option value="MAIS_SUSTENTAVEL">Mais sustentável</option>
+            <option value="MAIS_RAPIDO">Mais rápido</option>
+          </select>
+        </label>
+        <label id="cad-codigo-box" hidden>Código de administrador <input id="cad-codigo" type="password" autocomplete="off"></label>
+        <button type="submit" class="primario">Cadastrar</button>
+      </form>
+    </section>
+
+    <!-- ========== FAVORITOS ========== -->
+    <section id="tela-favoritos" class="tela" hidden>
+      <h2>Minhas rotas favoritas</h2>
+      <div id="lista-favoritos"></div>
+    </section>
+
+    <!-- ========== HISTÓRICO ========== -->
+    <section id="tela-historico" class="tela" hidden>
+      <h2>Meu histórico de consultas</h2>
+      <div id="lista-historico"></div>
+    </section>
+
+    <!-- ========== ADMINISTRAÇÃO ========== -->
+    <section id="tela-admin" class="tela" hidden>
+      <h2>Administração</h2>
+      <div class="abas" role="tablist">
+        <button data-aba="rotas" class="aba ativa">Rotas</button>
+        <button data-aba="transportes" class="aba">Transportes</button>
+        <button data-aba="alertas" class="aba">Alertas</button>
+      </div>
+
+      <!-- Rotas (CRUD da entidade principal) -->
+      <div id="aba-rotas" class="painel">
+        <form id="form-rota" class="cartao coluna-form">
+          <h3 id="titulo-form-rota">Nova rota</h3>
+          <input type="hidden" id="rota-id">
+          <label>Origem <input id="rota-origem" required></label>
+          <label>Destino <input id="rota-destino" required></label>
+          <label>Descrição (opcional) <input id="rota-descricao" placeholder="Ex.: Ônibus + bicicleta"></label>
+          <fieldset>
+            <legend>Trechos (pelo menos um)</legend>
+            <div id="rota-trechos"></div>
+            <button type="button" id="btn-add-trecho" class="secundario">+ Adicionar trecho</button>
+          </fieldset>
+          <div class="acoes">
+            <button type="submit" class="primario" id="btn-salvar-rota">Salvar rota</button>
+            <button type="button" class="secundario" id="btn-cancelar-rota" hidden>Cancelar edição</button>
+          </div>
+        </form>
+        <div id="lista-rotas"></div>
+      </div>
+
+      <!-- Transportes -->
+      <div id="aba-transportes" class="painel" hidden>
+        <form id="form-transporte" class="cartao coluna-form">
+          <h3 id="titulo-form-transporte">Novo meio de transporte</h3>
+          <input type="hidden" id="transp-id">
+          <label>Tipo
+            <select id="transp-tipo">
+              <option value="CARRO">Carro</option>
+              <option value="ONIBUS">Ônibus</option>
+              <option value="BICICLETA">Bicicleta</option>
+            </select>
+          </label>
+          <label>Nome <input id="transp-nome" required></label>
+          <label>Velocidade média (km/h) <input id="transp-vel" type="number" step="0.1" min="0.1" required></label>
+          <label id="transp-emissao-box">Emissão de CO₂ (g por km) <input id="transp-emissao" type="number" step="0.1" min="0"></label>
+          <label id="transp-fator-box">Fator de congestionamento (1,0 a 5,0) <input id="transp-fator" type="number" step="0.01" min="1" max="5" value="1.3"></label>
+          <label id="transp-cap-box" hidden>Capacidade de passageiros <input id="transp-cap" type="number" min="1" value="40"></label>
+          <div class="acoes">
+            <button type="submit" class="primario">Salvar transporte</button>
+            <button type="button" class="secundario" id="btn-cancelar-transp" hidden>Cancelar edição</button>
+          </div>
+        </form>
+        <div id="lista-transportes"></div>
+      </div>
+
+      <!-- Alertas -->
+      <div id="aba-alertas" class="painel" hidden>
+        <form id="form-alerta" class="cartao coluna-form">
+          <h3>Novo alerta</h3>
+          <label>Rota <select id="alerta-rota" required></select></label>
+          <label>Mensagem <input id="alerta-mensagem" required minlength="3" maxlength="255" placeholder="Ex.: Obras na via, trânsito lento"></label>
+          <button type="submit" class="primario">Registrar alerta</button>
+        </form>
+        <div id="lista-alertas"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    MoveCity &middot; AEP 4º Semestre (2026.2) &middot; UniCesumar &middot; ODS 11 &mdash; Cidades e Comunidades Sustentáveis
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
