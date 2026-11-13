@@ -15,7 +15,7 @@ if errorlevel 1 (
 
 REM 2) Procura o driver do MySQL (arquivo .jar) na pasta lib\
 set DRIVER=
-for %f in (lib\*.jar) do if not defined DRIVER set DRIVER=%f
+for %%f in (lib\*.jar) do if not defined DRIVER set DRIVER=%%f
 if not defined DRIVER (
   echo ERRO: coloque o driver MySQL Connector/J ^(arquivo .jar^) dentro da pasta lib\.
   echo Veja o README.md, secao "Driver do MySQL".
